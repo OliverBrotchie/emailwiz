@@ -60,7 +60,7 @@ actually works perfectly.
    never had to do this on a Vultr VPS, others have had this issue so if you
    cannot send, contact your VPS provider.
 7. Edit parameter section in emailwiz script. For example, change `${domain}` to
-`changchukuan.name` and `${subdom}` to `mx`.
+`changchukuan.name` and `${subdom}` to `mail`.
 
 ## Post-install requirement!
 
