@@ -39,11 +39,11 @@ actually works perfectly.
    link there to Vultr gives you a $100 credit for the first month to play
    around.
 2. **A Let's Encrypt SSL certificate for your site's `mx` subdomain**.
-   Create a httpd(1) site at `mx.domain.tld` and get a certificate
-   for it with acme-client(1).
+   Create a `httpd(1)` site at `mx.domain.tld` and get a certificate
+   for it with `acme-client(1)`.
 3. You need two little DNS records set on your domain registrar's site/DNS
    server: (1) an **MX record** pointing to your own main domain/IP and (2) a
-   **CNAME record** for your `mail.` subdomain.
+   **CNAME record** for your `mx.` subdomain.
 4. **A Reverse DNS entry for your site.** Go to your VPS settings and add an
    entry for your IPV4 Reverse DNS that goes from your IP address to
    `mx.domain.tld`. If you would like IPV6, you can do the same for
@@ -59,6 +59,8 @@ actually works perfectly.
    request that this port be opened to send mail successfully. Although I have
    never had to do this on a Vultr VPS, others have had this issue so if you
    cannot send, contact your VPS provider.
+7. Edit parameter section in emailwiz script. For example, change '${domain}' to
+'changchukuan.name' and '${subdom}' to 'mx'.
 
 ## Post-install requirement!
 
