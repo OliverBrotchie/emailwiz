@@ -59,8 +59,8 @@ actually works perfectly.
    request that this port be opened to send mail successfully. Although I have
    never had to do this on a Vultr VPS, others have had this issue so if you
    cannot send, contact your VPS provider.
-7. Edit parameter section in emailwiz script. For example, change '${domain}' to
-'changchukuan.name' and '${subdom}' to 'mx'.
+7. Edit parameter section in emailwiz script. For example, change `${domain}` to
+`changchukuan.name` and `${subdom}` to `mx`.
 
 ## Post-install requirement!
 
