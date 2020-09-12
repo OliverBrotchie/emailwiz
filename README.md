@@ -1,5 +1,9 @@
 # Email server setup script
 
+This is a heavily modified version of
+[LukeSmith's emailwiz](https://github.com/LukeSmithxyz/emailwiz). Basically
+everything (except comments) in the original script is rewrited to suit OpenBSD.
+
 I wrote this script during the gruelling process of installing and setting up
 an email server.  It perfectly reproduces my successful steps to ensure the
 same setup time and time again.
