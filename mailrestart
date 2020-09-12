@@ -1,0 +1,22 @@
+#!/bin/sh
+# Program:
+# 	* restart mail server related daemons
+# Dependency:
+# 	* nil
+# History:
+# 	* 20200912 cckuan first release
+
+readonly progname="$(basename "$0")"
+
+if test "$(id -u)" != '0'; then
+	printf '%s: Root access required.\n' "${progname}"
+	printf '%s: Exiting...\n' "${progname}"
+	exit 1
+fi
+
+for x in 'smtpd' 'dovecot' 'rspamd'; do
+	printf '%s: Restarting %s...' "${progname}" "${x}"
+	rcctl restart "${x}" 2>&1 > /dev/null \
+	    && printf ' Done\n' \
+	    || printf ' Failed\n'
+done
