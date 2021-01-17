@@ -1,9 +1,9 @@
 #!/bin/sh
-#                      _ _          _
-#  ___ _ __ ___   __ _(_) |_      _(_)____
-# / _ \ '_ ` _ \ / _` | | \ \ /\ / / |_  /
-#|  __/ | | | | | (_| | | |\ V  V /| |/ /
-# \___|_| |_| |_|\__,_|_|_| \_/\_/ |_/___|
+#                       _ _          _
+#   ___ _ __ ___   __ _(_) |_      _(_)____
+#  / _ \ '_ ` _ \ / _` | | \ \ /\ / / |_  /
+# |  __/ | | | | | (_| | | |\ V  V /| |/ /
+#  \___|_| |_| |_|\__,_|_|_| \_/\_/ |_/___|
 #
 
 #
@@ -11,9 +11,9 @@
 #
 
 # Login info:
-#	SMTPs server:  mx.domain.tld (${subdom}.${domain})
+#	SMTPs server:  mta.domain.tld (${subdom}.${domain})
 #	SMTPs Setting: port 465, SSL/TLS, PLAIN
-#	IMAPs server:  mx.domain.tld (${subdom}.${domain})
+#	IMAPs server:  mta.domain.tld (${subdom}.${domain})
 #	IMAPs Setting: port 993, SSL/TLS, PLAIN
 #	User:          user name w/o '@domain.tld'
 
@@ -22,9 +22,9 @@
 #	SMTPs port 465
 #	IMAPs port 993
 
-# Mail will be stored in non-retarded Maildirs because it's ${current_year}. This
-# makes it easier for use with isync, which is what I care about so I can have
-# an offline repo of mail.
+# Mail will be stored in non-retarded Maildirs because it's ${current_year}.
+# This makes it easier for use with isync, which is what I care about so I can
+# have an offline repo of mail.
 
 # The mailbox names are: Inbox, Sent, Drafts, Archive, Spam, Trash
 
@@ -41,7 +41,7 @@
 
 # 1. Modify "Paramater" section to your need.
 
-# 2. Have a OpenBSD 6.7 system with a static IP and all that. Pretty much any
+# 2. Have a OpenBSD 6.8 system with a static IP and all that. Pretty much any
 # default VPS offered by a company will have all the basic stuff you need.
 
 # 3. Have a Let's Encrypt SSL certificate for mx.domain.tld
@@ -58,7 +58,7 @@
 
 # Modify this section to your need
 readonly domain='domain.tld'
-readonly subdom='mx'
+readonly subdom='mta'
 
 # DO NOT modify this part
 readonly maildomain="${subdom}.${domain}"
@@ -74,8 +74,8 @@ readonly dkimkey="/etc/mail/dkim/${domain}.key"
 #
 
 if test "$(id -u)" != '0'; then
-	printf '%s: Root access required.\n' "${progname}"
-	printf '%s: Exiting...\n' "${progname}"
+	printf '%s: Root access required.\n' "${progname}" 2>&1
+	printf '%s: Exiting...\n' "${progname}" 2>&1
 	exit 1
 fi
 
@@ -87,9 +87,9 @@ printf '%s: Installing programs...\n' "${progname}"
 
 pkg_add opensmtpd-filter-dkimsign dovecot dovecot-pigeonhole rspamd opensmtpd-filter-rspamd
 
-if test ! -f /etc/doas.conf; then
-	printf '%s: doas(1) not configured.\n' "${progname}"
-	printf '%s: Exiting...\n' "${progname}"
+if test ! -f '/etc/doas.conf'; then
+	printf '%s: doas(1) not configured.\n' "${progname}" 2>&1
+	printf '%s: Exiting...\n' "${progname}" 2>&1
 	exit 1
 fi
 
@@ -473,3 +473,4 @@ inputting them in a registrar's web interface.
 Also saving these to ~/dns_emailwiz in case you want them in a file.
 
 EOF
+
