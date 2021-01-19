@@ -252,14 +252,17 @@ service imap-login {
 }
 
 # Configure LMTP
+lda_mailbox_autocreate = yes
+lda_mailbox_autosubscribe = yes
+
 service lmtp {
     unix_listener lmtp {
         mode = 0666
     }
 }
 
-# Configure sieve
 protocol lmtp {
+    # enable sieve
     mail_plugins = \$mail_plugins sieve
 }
 
