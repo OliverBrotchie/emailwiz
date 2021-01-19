@@ -260,6 +260,7 @@ service lmtp {
     }
 }
 
+# Configure sieve
 protocol lmtp {
     # enable sieve
     mail_plugins = \$mail_plugins sieve
@@ -284,6 +285,9 @@ plugin {
     # The include extension fetches the :global scripts from this
     # location.
     sieve_global = /usr/local/lib/dovecot/sieve/global/
+
+    # Allows logging debug messages
+    sieve_extensions = +vnd.dovecot.debug
 }
 
 EOF
