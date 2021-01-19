@@ -196,7 +196,6 @@ namespace inbox {
     mailbox Spam {
         special_use = \\Junk
         auto = subscribe
-        autoexpunge = 30d
     }
 
     mailbox Sent {
