@@ -1,10 +1,4 @@
 #!/bin/sh
-#                       _ _          _
-#   ___ _ __ ___   __ _(_) |_      _(_)____
-#  / _ \ '_ ` _ \ / _` | | \ \ /\ / / |_  /
-# |  __/ | | | | | (_| | | |\ V  V /| |/ /
-#  \___|_| |_| |_|\__,_|_|_| \_/\_/ |_/___|
-#
 
 #
 # THE SETUP
@@ -349,10 +343,10 @@ cat << EOF > /etc/rspamd/local.d/action.conf
 # Generate by emailwiz
 
 actions {
-    #reject = 15; # Reject when reaching this score
-    reject = null; # Disable Rejection
+    #reject = 15;   # Reject when reaching this score
+    reject = null;  # Disable Rejection
     add_header = 6; # Add header when reaching this score
-    greylist = 4; # Apply greylisting when reaching this score (will emit "soft reject action")
+    greylist = 4;   # Apply greylisting when reaching this score (will emit "soft reject action")
 }
 
 EOF
