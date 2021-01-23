@@ -38,15 +38,15 @@ actually works perfectly.
    default settings which will let you run this on them. Note that the affiliate
    link there to Vultr gives you a $100 credit for the first month to play
    around.
-2. **A Let's Encrypt SSL certificate for your site's `mx` subdomain**.
-   Create a `httpd(1)` site at `mx.domain.tld` and get a certificate
+2. **A Let's Encrypt SSL certificate for your site's `mta` subdomain**.
+   Create a `httpd(1)` site at `mta.domain.tld` and get a certificate
    for it with `acme-client(1)`.
 3. You need two little DNS records set on your domain registrar's site/DNS
    server: (1) an **MX record** pointing to your own main domain/IP and (2) a
-   **CNAME record** for your `mx.` subdomain.
+   **CNAME record** for your `mta.` subdomain.
 4. **A Reverse DNS entry for your site.** Go to your VPS settings and add an
    entry for your IPV4 Reverse DNS that goes from your IP address to
-   `mx.domain.tld`. If you would like IPV6, you can do the same for
+   `mta.domain.tld`. If you would like IPV6, you can do the same for
    that. This has been tested on Vultr, and all decent VPS hosts will have
    a section on their instance settings page to add a reverse DNS PTR entry.
    You can use the 'Test Email Server' or ':smtp' tool on
@@ -60,7 +60,7 @@ actually works perfectly.
    never had to do this on a Vultr VPS, others have had this issue so if you
    cannot send, contact your VPS provider.
 7. Edit parameter section in emailwiz script. For example, change `${domain}` to
-`changchukuan.name` and `${subdom}` to `mail`.
+`changchukuan.name` and `${subdom}` to `mta`.
 
 ## Post-install requirement!
 
@@ -88,15 +88,15 @@ to log in remotely though:
 Let's say you want to access your mail with Thunderbird or mutt or another
 email program. For my domain, the server information will be as follows:
 
-- SMTP server: `mx.domain.tld`
+- SMTP server: `mta.domain.tld`
 - SMTP port: 465
-- IMAP server: `mx.domain.tld`
+- IMAP server: `mta.domain.tld`
 - IMAP port: 993
 - Username `user` (I.e. *not* `user@domain.tld`)
 
 The last point is important. Many email systems use a full email address on
-login. Since we just simply use local PAM logins, only the user's name is used
-(this makes a difference if you're using luke's
+login. Since we just simply use local BSDAuth logins, only the user's name is
+used (this makes a difference if you're using luke's
 [mutt-wizard](https://github.com/lukesmithxyz/mutt-wizard), etc.).
 
 ## Tweaking things
