@@ -10,41 +10,43 @@
 #	IMAPs server:  mta.domain.tld (${subdom}.${domain})
 #	IMAPs Setting: port 993, SSL/TLS, PLAIN
 #	User:          user name w/o '@domain.tld'
-
+#
 # Firewall setting, open following port:
-#	SMPT  port 25
-#	SMTPs port 465
-#	IMAPs port 993
-
+#	smtp  port 25
+#	smtps port 465
+#	imaps port 993
+#
 # Mail will be stored in non-retarded Maildirs because it's ${current_year}.
 # This makes it easier for use with isync, which is what I care about so I can
 # have an offline repo of mail.
-
+#
 # The mailbox names are: Inbox, Sent, Drafts, Archive, Spam, Trash
-
+#
 # Use the typical unix login system for mail users. Users will log into their
 # email with their passnames on the server. No usage of a redundant mySQL
 # database to do this.
-
-# Rspamd whitelists and blacklists are in /etc/rspamd/.local.d. Modify them to
-# your own need.
+#
+# Rspamd whitelists and blacklists are in /etc/rspamd/.local.d
+# Modify them to your own need.
 
 #
 # DEPENDENCIES BEFORE RUNNING
 #
-
+#
 # 1. Modify "Paramater" section to your need.
-
-# 2. Have a OpenBSD 6.8 system with a static IP and all that. Pretty much any
+#
+# 2. Have a OpenBSD system with a static IP and all that. Pretty much any
 # default VPS offered by a company will have all the basic stuff you need.
-
+#
 # 3. Have a Let's Encrypt SSL certificate for mx.domain.tld
 # (${subdom}.${domain}) using httpd(1) and acme-client(1).
-
+#
 # 4. If you've been toying around with your server settings trying to get
 # smtpd/dovecot/rspamd/etc. I recommend you to clear out /etc/mail, /etc/dovecot
 # , and /etc/rspamd/local.d yourself if needbe, because this script is build on
 # top of only the defaults.
+#
+# 5. Setup doas(1) so we can act as _dkimsign user
 
 #
 # Parameters
@@ -52,11 +54,12 @@
 
 # Modify this section to your need
 readonly domain='domain.tld'
-readonly subdom='mta'
+readonly subdom='mta0'
 
 # DO NOT modify this part
 readonly maildomain="${subdom}.${domain}"
 readonly progname="$(basename "$0")"
+
 # Certificate for smtp
 readonly certfile="/etc/ssl/${maildomain}.fullchain.pem"
 readonly keyfile="/etc/ssl/private/${maildomain}.key"
@@ -79,7 +82,8 @@ fi
 
 printf '%s: Installing programs...\n' "${progname}"
 
-pkg_add opensmtpd-filter-dkimsign dovecot dovecot-pigeonhole rspamd opensmtpd-filter-rspamd
+pkg_add opensmtpd-filter-dkimsign dovecot dovecot-pigeonhole rspamd \
+    opensmtpd-filter-rspamd
 
 if test ! -f '/etc/doas.conf'; then
 	printf '%s: doas(1) not configured.\n' "${progname}" 2>&1
@@ -316,9 +320,7 @@ if ! grep -q 'dovecot' /etc/login.conf; then
 	cp -f /etc/login.conf /etc/login.conf.def
 	cat << EOF >> /etc/login.conf
 
-#
 # Dovecot entry
-#
 dovecot:\\
         :openfiles-cur=1024:\\
         :openfiles-max=2048:\\
@@ -360,7 +362,9 @@ for x in 'local_bl_from.map.inc' 'local_bl_ip.map.inc' 'local_bl_rcpt.map.inc' \
 done
 
 cat << EOF > /etc/rspamd/local.d/multimap.conf
+#
 # Blacklists
+#
 
 local_bl_ip {
 	type = "ip";
@@ -386,7 +390,9 @@ local_bl_rcpt {
 	score = 5;
 }
 
+#
 # Whitelists
+#
 
 local_wl_ip {
 	type = "ip";
@@ -426,7 +432,7 @@ doas -u _dkimsign openssl genrsa -out "${dkimkey}" 2048
 # Restart daemons
 #
 
-for x in 'smtpd' 'dovecot' 'rspamd'; do
+for x in 'smtpd' 'dovecot' 'rspamd' 'redis'; do
 	printf '%s: Enabling %s...' "${progname}" "${x}"
 	rcctl enable "${x}" 2>&1 > /dev/null && printf ' Done\n' || printf ' Failed\n'
 	printf '%s: Restarting %s...' "${progname}" "${x}"
