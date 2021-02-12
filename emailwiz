@@ -433,10 +433,19 @@ doas -u _dkimsign openssl genrsa -out "${dkimkey}" 2048
 #
 
 for x in 'smtpd' 'dovecot' 'rspamd' 'redis'; do
-	printf '%s: Enabling %s...' "${progname}" "${x}"
-	rcctl enable "${x}" 2>&1 > /dev/null && printf ' Done\n' || printf ' Failed\n'
-	printf '%s: Restarting %s...' "${progname}" "${x}"
-	rcctl restart "${x}" 2>&1 > /dev/null && printf ' Done\n' || printf ' Failed\n'
+	printf '%s: Enabling %s...' "${progname}" "$x"
+	if rcctl enable "$x" 2>&1 > /dev/null; then
+		printf ' Done\n'
+	else
+		printf ' Failed\n'
+	fi
+
+	printf '%s: Restarting %s...' "${progname}" "$x"
+	if rcctl restart "$x" 2>&1 > /dev/null; then
+		printf ' Done\n'
+	else
+		printf ' Failed\n'
+	fi
 done
 
 #

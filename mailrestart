@@ -14,9 +14,11 @@ if test "$(id -u)" != '0'; then
 	exit 1
 fi
 
-for x in 'smtpd' 'dovecot' 'rspamd'; do
-	printf '%s: Restarting %s...' "${progname}" "${x}"
-	rcctl restart "${x}" 2>&1 > /dev/null \
-	    && printf ' Done\n' \
-	    || printf ' Failed\n'
+for x in 'smtpd' 'dovecot' 'rspamd' 'redis'; do
+	printf '%s: Restarting %s...' "${progname}" "$x"
+	if rcctl restart "$x" 2>&1 > /dev/null; then
+		printf ' Done\n'
+	else
+		printf ' Failed\n'
+	fi
 done
