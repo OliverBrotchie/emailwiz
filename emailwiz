@@ -70,7 +70,7 @@ readonly dkimkey="/etc/mail/dkim/${domain}.key"
 # Check privilege
 #
 
-if test "$(id -u)" != '0'; then
+if [ "$(id -u)" != '0' ]; then
 	printf '%s: Root access required.\n' "${progname}" 2>&1
 	printf '%s: Exiting...\n' "${progname}" 2>&1
 	exit 1
@@ -83,9 +83,9 @@ fi
 printf '%s: Installing programs...\n' "${progname}"
 
 pkg_add opensmtpd-filter-dkimsign dovecot dovecot-pigeonhole rspamd \
-    opensmtpd-filter-rspamd
+    opensmtpd-filter-rspamd || exit 1
 
-if test ! -f '/etc/doas.conf'; then
+if [ ! -f '/etc/doas.conf' ]; then
 	printf '%s: doas(1) not configured.\n' "${progname}" 2>&1
 	printf '%s: Exiting...\n' "${progname}" 2>&1
 	exit 1
@@ -97,7 +97,7 @@ fi
 
 printf '%s: Checking Certificate files...' "${progname}"
 
-if test -f "${certfile}" && test -f "${keyfile}"; then
+if [ -f "${certfile}" ] && [ -f "${keyfile}" ]; then
 	printf ' Done\n'
 else
 	printf ' File not found\n'
@@ -113,7 +113,7 @@ fi
 
 printf '%s: Configuring alternative server name (/etc/mail/mailname)...\n' "${progname}"
 
-test -f /etc/mail/mailname && cp -f /etc/mail/mailname /etc/mail/mailname.def
+[ -f /etc/mail/mailname ] && cp -f /etc/mail/mailname /etc/mail/mailname.def
 printf '%s\n' "${maildomain}" > /etc/mail/mailname
 
 #
@@ -359,8 +359,8 @@ printf '%s: Configuring Rspamd black/whitelist (multimap.conf)...\n' "${progname
 
 for x in 'local_bl_from.map.inc' 'local_bl_ip.map.inc' 'local_bl_rcpt.map.inc' \
 'local_wl_from.map.inc' 'local_wl_ip.map.inc' 'local_wl_rcpt.map.inc'; do
-	touch "/etc/rspamd/local.d/${x}"
-	chmod 666 "/etc/rspamd/local.d/${x}"
+	touch "/etc/rspamd/local.d/$x"
+	chmod 666 "/etc/rspamd/local.d/$x"
 done
 
 cat << EOF > /etc/rspamd/local.d/multimap.conf
