@@ -128,6 +128,8 @@ cat << EOF > /etc/mail/smtpd.conf
 # This is the smtpd server system-wide configuration file.
 # See smtpd.conf(5) for more information.
 
+smtp max-message-size 100M
+
 pki "${maildomain}" cert "${certfile}"
 pki "${maildomain}" key  "${keyfile}"
 
@@ -179,9 +181,9 @@ cat << EOF > /etc/dovecot/dovecot.conf
 # Use imap and lmtp ( deliver mail for OpenSMTPD )
 protocols = imap lmtp
 
-# Our mail for each user will be in ~/Maildir, and the inbox will be ~/Maildir/Inbox
+# Our mail for each user will be in ~/maildir, and the inbox will be ~/maildir/Inbox
 # The LAYOUT option is also important because otherwise, the boxes will be ".Sent" instead of "Sent".
-mail_location = maildir:~/Maildir:INBOX=~/Maildir/Inbox:LAYOUT=fs
+mail_location = maildir:~/maildir:INBOX=~/maildir/Inbox:LAYOUT=fs
 namespace inbox {
 
     inbox = yes
