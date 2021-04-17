@@ -12,9 +12,10 @@
 #	User:          user name w/o '@domain.tld'
 #
 # Firewall setting, open following port:
-#	smtp  port 25
-#	smtps port 465
-#	imaps port 993
+#	smtp       port 25
+#	smtps      port 465
+#	submission port 465
+#	imaps      port 993
 #
 # Mail will be stored in non-retarded Maildirs because it's ${current_year}.
 # This makes it easier for use with isync, which is what I care about so I can
@@ -143,8 +144,9 @@ filter "dkimsign" proc-exec "filter-dkimsign -d ${domain} -s ${subdom} -k ${dkim
 table aliases file:/etc/mail/aliases
 
 listen on lo0
-listen on egress port 25  tls   pki "${maildomain}"      filter "spam_triad"
-listen on egress port 465 smtps pki "${maildomain}" auth filter "dkimsign"
+listen on egress port 25  tls         pki "${maildomain}"      filter "spam_triad"
+listen on egress port 465 smtps       pki "${maildomain}" auth filter "dkimsign"
+listen on egress port 587 tls-require pki "${maildomain}" auth filter "dkimsign"
 
 action "local_mail" lmtp "/var/dovecot/lmtp" alias <aliases>
 action "outbound"   relay helo "${maildomain}"
