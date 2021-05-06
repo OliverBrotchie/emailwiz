@@ -134,8 +134,8 @@ smtp max-message-size 100M
 pki "${maildomain}" cert "${certfile}"
 pki "${maildomain}" key  "${keyfile}"
 
-filter "check_rdns"   phase connect match !rdns   disconnect "550 no rDNS"
-filter "check_fcrdns" phase connect match !fcrdns disconnect "550 no FCrDNS"
+filter "check_rdns"   phase connect match !rdns   junk
+filter "check_fcrdns" phase connect match !fcrdns junk
 filter "rspamd" proc-exec "filter-rspamd"
 filter "spam_triad" chain { "check_rdns", "check_fcrdns", "rspamd" }
 
@@ -305,8 +305,9 @@ mkdir -p /usr/local/lib/dovecot/sieve/
 # Default sieve script: put Rspamd-tagged mails into mailbox "Spam"
 cat << EOF > /usr/local/lib/dovecot/sieve/default.sieve
 require "fileinto";
-if header :contains "X-Spam" "YES" {
-    fileinto "Spam";
+require "mailbox";
+if header :contains "X-Spam" ["YES", "yes"] {
+    fileinto :create "Spam";
 }
 
 EOF
