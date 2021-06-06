@@ -14,7 +14,7 @@
 # Firewall setting, open following port:
 #	smtp       port 25
 #	smtps      port 465
-#	submission port 465
+#	submission port 587
 #	imaps      port 993
 #
 # Mail will be stored in non-retarded Maildirs because it's ${current_year}.
